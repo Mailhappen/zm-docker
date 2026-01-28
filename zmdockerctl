@@ -1,0 +1,102 @@
+#!/bin/bash
+#set -x
+
+setup() {
+  profile=$1
+  prefix="$(echo ${HOSTNAME} | tr -d '.')"
+  run="docker run -d --name ${HOSTNAME} \
+    -h ${HOSTNAME} \
+    -v ${prefix}-ssh:/opt/zimbra/.ssh \
+    -v ${prefix}-backup:/opt/zimbra/backup \
+    -v ${prefix}-common-conf:/opt/zimbra/common/conf \
+    -v ${prefix}-common-etc-java:/opt/zimbra/common/etc/java/ \
+    -v ${prefix}-common-jetty_home-resources:/opt/zimbra/common/jetty_home/resources/ \
+    -v ${prefix}-conf:/opt/zimbra/conf \
+    -v ${prefix}-data:/opt/zimbra/data \
+    -v ${prefix}-db-data:/opt/zimbra/db/data \
+    -v ${prefix}-index:/opt/zimbra/index \
+    -v ${prefix}-jetty_base-etc:/opt/zimbra/jetty_base/etc/ \
+    -v ${prefix}-jetty_base-modules:/opt/zimbra/jetty_base/modules/ \
+    -v ${prefix}-jetty_base-start.d:/opt/zimbra/jetty_base/start.d/ \
+    -v ${prefix}-log:/opt/zimbra/log \
+    -v ${prefix}-logger:/opt/zimbra/logger \
+    -v ${prefix}-redolog:/opt/zimbra/redolog \
+    -v ${prefix}-ssl:/opt/zimbra/ssl \
+    -v ${prefix}-store:/opt/zimbra/store \
+    -v ${prefix}-zimlets-deployed:/opt/zimbra/zimlets-deployed \
+    -v ${prefix}-zmstat:/opt/zimbra/zmstat \
+    -v ${prefix}-logrotate.d:/etc/logrotate.d \
+    -v ${prefix}-logrotate:/var/lib/logrotate \
+    -v ${prefix}-syslog:/var/log \
+    -v ${prefix}-cron:/var/spool/cron \
+    yeak/zimbra-aio:10.1.15.p1"
+
+  #echo $run
+  config=/tmp/config.$$
+  cat <<EOT > $config
+CREATEADMIN="${ADMIN}@${DOMAIN}"
+CREATEADMINPASS="${PASSWORD}"
+CREATEDOMAIN="${DOMAIN}"
+LDAPHOST="${LDAP_HOST}"
+LDAPPORT="636"
+LDAPROOTPASS="${LDAP_ROOT_PASS}"
+LDAPADMINPASS="${LDAP_ADMIN_PASS}"
+LDAPREPPASS="${LDAP_ADMIN_PASS}"
+LDAPPOSTPASS="${LDAP_ADMIN_PASS}"
+LDAPAMAVISPASS="${LDAP_ADMIN_PASS}"
+ldap_nginx_password="${LDAP_ADMIN_PASS}"
+ldap_bes_searcher_password="${LDAP_ADMIN_PASS}"
+SMTPHOST="${SMTP_HOST}"
+SMTPDEST="${ADMIN}@${DOMAIN}"
+SMTPSOURCE="${ADMIN}@${DOMAIN}"
+AVUSER="${ADMIN}@${DOMAIN}"
+AVDOMAIN="${DOMAIN}"
+TRAINSASPAM="spam@${DOMAIN}"
+TRAINSAHAM="ham@${DOMAIN}"
+VIRUSQUARANTINE="virus-quarantine@${DOMAIN}"
+VERSIONUPDATECHECKS="FALSE"
+zimbraVersionCheckNotificationEmail="${ADMIN}@${DOMAIN}"
+zimbraVersionCheckNotificationEmailFrom="${ADMIN}@${DOMAIN}"
+ENABLEDEFAULTBACKUP="no"
+zimbraBackupReportEmailRecipients="${ADMIN}@${DOMAIN}"
+zimbraBackupReportEmailSender="${ADMIN}@${DOMAIN}"
+LICENSEACTIVATIONOPTION="2"
+ONLYOFFICEHOSTNAME="${ONLYOFFICE_HOST}"
+ONLYOFFICESTANDALONE="yes"
+zimbraPrefTimeZoneId="${TIMEZONE}"
+LDAPREPLICATIONTYPE="${LDAP_REPLICATION_TYPE:-master}"
+LDAPSERVERID="${LDAP_SERVER_ID:-1}"
+EOT
+  cat $config
+  rm -f $config
+  #eval $cmd
+  #/opt/zimbra/config.* (hard coded, save the latest to config.zimbra)
+
+}
+
+usage() {
+  echo "Usage: $0 [setup profile] [start] [stop]"
+  exit 0
+}
+
+error() {
+  echo "$@"
+  exit 1
+
+}
+
+cmd=$1
+case "$cmd" in
+
+  setup)
+    shift
+    profile=$1
+    [ -n "$profile" -a -s "$profile" ] || error "Please provide the server profile to setup."
+    source $profile
+    setup $profile
+    ;;
+
+  *)
+    usage
+    ;;
+esac

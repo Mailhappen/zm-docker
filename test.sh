@@ -1,22 +1,33 @@
-docker run -d -it \
-	--name mail.example.test \
-	-h mail.example.test \
-	-v mat-ssh:/opt/zimbra/.ssh \
-	-v mat-backup:/opt/zimbra/backup \
-	-v mat-common-conf:/opt/zimbra/common/conf \
-	-v mat-conf:/opt/zimbra/conf \
-	-v mat-data:/opt/zimbra/data \
-	-v mat-db-data:/opt/zimbra/db/data \
-	-v mat-index:/opt/zimbra/index \
-        -v mat-jetty-etc:/opt/zimbra/jetty_base/etc/ \
-        -v mat-jetty-modules:/opt/zimbra/jetty_base/modules/ \
-        -v mat-jetty-start.d:/opt/zimbra/jetty_base/start.d/ \
-	-v mat-log:/opt/zimbra/log \
-	-v mat-redolog:/opt/zimbra/redolog \
-	-v mat-ssl:/opt/zimbra/ssl \
-	-v mat-store:/opt/zimbra/store \
-	-v mat-zimlets-deployed:/opt/zimbra/zimlets-deployed \
-	-v mat-zmstat:/opt/zimbra/zmstat \
-	-v mat-syslog:/var/log \
-	yeak/zimbra-aio:10.1.15.p1
+#!/bin/bash
 
+HOSTNAME="mail.mailhappen.test"
+prefix="$(echo ${HOSTNAME} | tr -d '.')"
+cmd="docker run -d -it --name ${HOSTNAME} \
+    -h ${HOSTNAME} \
+    -v ${prefix}-ssh:/opt/zimbra/.ssh \
+    -v ${prefix}-backup:/opt/zimbra/backup \
+    -v ${prefix}-common-conf:/opt/zimbra/common/conf \
+    -v ${prefix}-common-etc-java:/opt/zimbra/common/etc/java/ \
+    -v ${prefix}-common-jetty_home-resources:/opt/zimbra/common/jetty_home/resources/ \
+    -v ${prefix}-conf:/opt/zimbra/conf \
+    -v ${prefix}-data:/opt/zimbra/data \
+    -v ${prefix}-db-data:/opt/zimbra/db/data \
+    -v ${prefix}-index:/opt/zimbra/index \
+    -v ${prefix}-jetty_base-etc:/opt/zimbra/jetty_base/etc/ \
+    -v ${prefix}-jetty_base-modules:/opt/zimbra/jetty_base/modules/ \
+    -v ${prefix}-jetty_base-start.d:/opt/zimbra/jetty_base/start.d/ \
+    -v ${prefix}-log:/opt/zimbra/log \
+    -v ${prefix}-logger:/opt/zimbra/logger \
+    -v ${prefix}-redolog:/opt/zimbra/redolog \
+    -v ${prefix}-ssl:/opt/zimbra/ssl \
+    -v ${prefix}-store:/opt/zimbra/store \
+    -v ${prefix}-zimlets-deployed:/opt/zimbra/zimlets-deployed \
+    -v ${prefix}-zmstat:/opt/zimbra/zmstat \
+    -v ${prefix}-logrotate.d:/etc/logrotate.d \
+    -v ${prefix}-logrotate:/var/lib/logrotate \
+    -v ${prefix}-syslog:/var/log \
+    -v ${prefix}-cron:/var/spool/cron \
+    yeak/zimbra-aio:10.1.15.p1"
+
+#echo $cmd
+eval $cmd
