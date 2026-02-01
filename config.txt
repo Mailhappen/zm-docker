@@ -1,0 +1,14 @@
+# This is standalone (AIO)
+
+# Default Domain
+DEFAULT_DOMAIN=mailhappen.test
+
+# Admin and default password
+ADMIN_USERNAME=mailadmin
+ADMIN_PASSWORD=zimbra
+
+# Local timezone
+TIMEZONE=Asia/Kuala_Lumpur
+
+# Set a custom network range so that MTA mynetworks is static
+SUBNET=172.28.0.0/24

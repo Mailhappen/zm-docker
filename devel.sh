@@ -1,9 +1,14 @@
 #!/bin/bash
 
-HOSTNAME="mail.mailhappen.test"
-prefix="$(echo ${HOSTNAME} | tr -d '.')"
-cmd="docker run -d -it --name ${HOSTNAME} \
+source ./config.txt
+
+HOSTNAME=mail.mailhappen.test
+
+prefix=$(echo ${HOSTNAME} | tr -d '.')
+cmd="docker run -it -d --name ${HOSTNAME} \
     -h ${HOSTNAME} \
+    --env-file ./config.txt \
+    -v ./data:/data \
     -v ${prefix}-ssh:/opt/zimbra/.ssh \
     -v ${prefix}-backup:/opt/zimbra/backup \
     -v ${prefix}-common-conf:/opt/zimbra/common/conf \
@@ -27,7 +32,7 @@ cmd="docker run -d -it --name ${HOSTNAME} \
     -v ${prefix}-logrotate:/var/lib/logrotate \
     -v ${prefix}-syslog:/var/log \
     -v ${prefix}-cron:/var/spool/cron \
-    yeak/zimbra-aio:10.1.15.p1"
+    ${HOSTNAME}"
 
-#echo $cmd
-eval $cmd
+echo $cmd
+#eval $cmd
