@@ -1,6 +1,10 @@
 #!/bin/bash
 set -x
 
+# Location to keep the config
+install_history=/opt/zimbra/backup/install_history
+config_zimbra=/opt/zimbra/backup/config.zimbra
+
 genpassword() {
   /opt/zimbra/bin/zmjava com.zimbra.common.util.RandomPassword -l 8 10
 }
@@ -36,7 +40,7 @@ zimbraBackupReportEmailSender="${ADMIN_USERNAME}@${DEFAULT_DOMAIN}"
 LICENSEACTIVATIONOPTION="2"
 ONLYOFFICEHOSTNAME="${ONLYOFFICE_HOST:=$HOSTNAME}"
 ONLYOFFICESTANDALONE="yes"
-zimbraPrefTimeZoneId="${TIMEZONE:=Asia/Kuala_Lumpur}"
+zimbraPrefTimeZoneId="${TIME_ZONE:=Asia/Kuala_Lumpur}"
 LDAPREPLICATIONTYPE="${LDAP_REPLICATION_TYPE:=master}"
 LDAPSERVERID="${LDAP_SERVER_ID:=1}"
 EOT
@@ -58,35 +62,35 @@ copy_new_files() {
 }
 
 keep_config() {
-    /usr/bin/cp -f /opt/zimbra/.install_history /data/install_history
-    /usr/bin/cp -f `ls -1t /opt/zimbra/config.* | tail -1` /data/config.zimbra
+    /usr/bin/cp -f /opt/zimbra/.install_history $install_history
+    /usr/bin/cp -f `ls -1t /opt/zimbra/config.* | tail -1` $config_zimbra
 }
 
 # Set timezone
-if [[ -f /usr/share/zoneinfo/${TIMEZONE} ]]; then
-  ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
-  echo ${TIMEZONE} > /etc/timezone
+if [[ -f /usr/share/zoneinfo/${TIME_ZONE} ]]; then
+  ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
+  echo ${TIME_ZONE} > /etc/timezone
 fi
 
 # Start zimbra
-if grep -q 'CONFIGURED END' /data/install_history 2>/dev/null; then
+if grep -q 'CONFIGURED END' $install_history 2>/dev/null; then
 
   echo "### CONFIGURED ###"
 
   # Check if the same or different image version is used
   ver=$(sed -nE 's/.*zimbra-core-([0-9.]+_.*)\.rpm$/\1/p' /opt/zimbra/.install_history | tail -1)
-  if ! grep -q "zimbra-core-$ver" /data/install_history 2>/dev/null; then
+  if ! grep -q "zimbra-core-$ver" $install_history 2>/dev/null; then
 
     echo "### UPGRADE ###"
 
     # inform container new version is available
-    cat /opt/zimbra/.install_history | sed 's/INSTALLED/UPGRADED/' >> /data/install_history
-    /usr/bin/cp -f /data/install_history /opt/zimbra/.install_history
+    cat /opt/zimbra/.install_history | sed 's/INSTALLED/UPGRADED/' >> $install_history
+    /usr/bin/cp -f $install_history /opt/zimbra/.install_history
     # copy new files to our volume
     copy_new_files
 
     # run zmsetup.pl to perform upgrade
-    /opt/zimbra/libexec/zmsetup.pl -c /data/config.zimbra
+    /opt/zimbra/libexec/zmsetup.pl -c $config_zimbra
 
     # keep these
     keep_config

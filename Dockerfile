@@ -1,8 +1,8 @@
 # Can be set via build-arg
-ARG BASE_OS=yeak/zimbra-aio
+ARG ZIMBRA_IMAGE=yeak/zimbra-aio
 ARG VERSION=10.1.15.p1
 
-FROM ${BASE_OS}:${VERSION}
+FROM ${ZIMBRA_IMAGE}:${VERSION}
 
 RUN mkdir /upgrade && /usr/bin/tar cf - \
         /opt/zimbra/conf \

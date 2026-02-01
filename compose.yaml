@@ -1,0 +1,85 @@
+services:
+  zimbra:
+    build:
+      context: .
+      args:
+        - ARG ZIMBRA_IMAGE=${ZIMBRA_IMAGE}
+        - ARG VERSION=${VERSION}
+    env_file: ./config.txt
+    healthcheck:
+      test: su - zimbra -c 'zmcontrol status' || exit 1
+      interval: 3m
+      timeout: 1m
+    hostname: ${SERVICE_HOSTNAME}
+    networks:
+      - zimbra_network
+    ports:
+      - "25:25"
+      - "80:80"
+      - "443:443"
+      - "587:587"
+      - "636:636"
+      - "993:993"
+      - "995:995"
+      - "7071:7071"
+      - "9071:9071"
+    restart: unless-stopped
+    stop_grace_period: 3m
+    volumes:
+      - backup:/opt/zimbra/backup
+      - common-conf:/opt/zimbra/common/conf
+      - common-etc-java:/opt/zimbra/common/etc/java
+      - common-jetty_home-resources:/opt/zimbra/common/jetty_home/resources
+      - conf:/opt/zimbra/conf
+      - cron:/var/spool/cron
+      - data:/opt/zimbra/data
+      - db-data:/opt/zimbra/db/data
+      - index:/opt/zimbra/index
+      - jetty_base-etc:/opt/zimbra/jetty_base/etc
+      - jetty_base-modules:/opt/zimbra/jetty_base/modules
+      - jetty_base-start.d:/opt/zimbra/jetty_base/start.d
+      - log:/opt/zimbra/log
+      - logger:/opt/zimbra/logger
+      - logrotate:/var/lib/logrotate
+      - logrotate.d:/etc/logrotate.d
+      - redolog:/opt/zimbra/redolog
+      - ssh:/opt/zimbra/.ssh
+      - ssl:/opt/zimbra/ssl
+      - store:/opt/zimbra/store
+      - syslog:/var/log
+      - zimlets-deployed:/opt/zimbra/zimlets-deployed
+      - zmstat:/opt/zimbra/zmstat
+
+networks:
+  zimbra_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${DOCKER_SUBNET}
+
+volumes:
+  backup:
+  common-conf:
+  common-etc-java:
+  common-jetty_home-resources:
+  conf:
+  cron:
+  data:
+  db-data:
+  index:
+  jetty_base-etc:
+  jetty_base-modules:
+  jetty_base-start.d:
+  log:
+  logger:
+  logrotate:
+  logrotate.d:
+  redolog:
+  ssh:
+  ssl:
+  store:
+  syslog:
+  zimlets-deployed:
+  zmstat:
+
