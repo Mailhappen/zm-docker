@@ -10,7 +10,7 @@ This deploy Zimbra as standalone single server.
 4. Use `docker compose exec zimbra bash` to login into the container. To exit from the container, type `exit`.
 5. To stop the container, type `docker compose stop`; to start again, type `docker compose start`.
 6. To destroy the container, type `docker compose down`. Your data will be retained. Refer to Step 3 to start again.
-7. To destroy everything, type `docker compose down -v`. This remove container AND the volume data. **Use With Caution!**
+7. To destroy everything, type `docker compose down -v`. This remove container AND the volume data. **USE WITH CAUTION!**
 
 ## Update to new version
 
