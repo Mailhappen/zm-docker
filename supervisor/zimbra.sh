@@ -72,6 +72,12 @@ if [[ -f /usr/share/zoneinfo/${TIME_ZONE} ]]; then
   echo ${TIME_ZONE} > /etc/timezone
 fi
 
+# Exit if maintenance
+if [[ "${MAINTENANCE}" == 1 ]]; then
+  echo "Maintenance Mode"
+  exit 0
+fi
+
 # Start zimbra
 if grep -q 'CONFIGURED END' $install_history 2>/dev/null; then
 
