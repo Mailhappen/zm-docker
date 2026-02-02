@@ -12,6 +12,16 @@ This deploy Zimbra as standalone single server.
 6. To destroy the container, type `docker compose down`. Your data will be retained. Refer to Step 3 to start again.
 7. To destroy everything, type `docker compose down -v`. This remove container AND the volume data. **USE WITH CAUTION!**
 
+### Example to run Zimbra docker
+```
+git clone https://github.com/Mailhappen/zm-docker.git
+mv zm-docker mail.example.test
+cd mail.example.test
+cat config.txt
+docker compose up -d
+docker compose logs -f
+```
+
 ## Maintenance Mode
 
 Maintenance mode allow us to stop the container during startup process so that we can manually perform tasks such as migration.
@@ -21,6 +31,15 @@ To start container in maintenance mode, use `docker compose -f compose.yaml -f m
 ## Update to new version
 
 If there is new zimbra image released, edit `config.txt` to change the `VERSION` and type `docker compose build` to create a new one container. And then `docker compose up -d`.
+
+### Example to upgrade
+
+```
+cd mail.example.test
+vi config.txt
+docker compose build
+docker compose up -d
+```
 
 ## What's next
 
