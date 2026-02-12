@@ -17,7 +17,7 @@ This deploy Zimbra as standalone single server.
 git clone https://github.com/Mailhappen/zm-docker.git
 mv zm-docker mail.example.test
 cd mail.example.test
-cat config.txt
+vi config.txt
 docker compose up -d
 docker compose logs -f
 ```
