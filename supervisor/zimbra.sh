@@ -2,8 +2,8 @@
 set -x
 
 # Location to keep the config
-install_history=/opt/zimbra/backup/install_history
-config_zimbra=/opt/zimbra/backup/config.zimbra
+install_history=/opt/zimbra/conf/install_history
+config_zimbra=/opt/zimbra/conf/config.zimbra
 
 genpassword() {
   /opt/zimbra/bin/zmjava com.zimbra.common.util.RandomPassword -l 8 10
