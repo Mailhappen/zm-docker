@@ -1,0 +1,28 @@
+volumes:
+  backup:
+    driver: juicedata/juicefs:1.3.1
+    driver_opts:
+      name: ${VOLUME_PREFIX}-backup
+      metaurl: sqlite3://${VOLUME_PREFIX}-backup.db
+      storage: s3
+      bucket: ${BUCKET}
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+  index:
+    driver: juicedata/juicefs:1.3.1
+    driver_opts:
+      name: ${VOLUME_PREFIX}-index
+      metaurl: sqlite3://${VOLUME_PREFIX}-index.db
+      storage: s3
+      bucket: ${BUCKET}
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+  store:
+    driver: juicedata/juicefs:1.3.1
+    driver_opts:
+      name: ${VOLUME_PREFIX}-store
+      metaurl: sqlite3://${VOLUME_PREFIX}-store.db
+      storage: s3
+      bucket: ${BUCKET}
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}

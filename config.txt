@@ -21,3 +21,10 @@ VERSION=10.1.15.p1
 
 # Use custom network so that MTA mynetworks is static
 DOCKER_SUBNET=172.28.0.0/24
+
+# Juicefs config
+# Note: volume name *cannot* contain "_" or "."
+#VOLUME_PREFIX=mail-example-test
+#BUCKET=https://YOUR_S3_BUCKET_URL
+#ACCESS_KEY=YOUR_S3_ACCESS_KEY
+#SECRET_KEY=YOUR_S3_SECRET_KEY

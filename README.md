@@ -26,7 +26,32 @@ docker compose logs -f
 
 Maintenance mode allow us to stop the container during startup process so that we can manually perform tasks such as migration.
 
-To start container in maintenance mode, use `docker compose -f compose.yaml -f maintenance.yaml up -d`. To see the status, type `docker compose logs`.
+To start container in maintenance mode,
+
+```
+docker compose -f compose.yaml -f maintenance.yaml up -d
+docker compose exec zimbra bash
+```
+
+While inside the container, do your work. Once completed, you can start up Zimbra as usual to test the startup.
+
+```
+unset MAINTENANCE
+/etc/supervisor/zimbra.sh
+```
+
+We often use this procedure to test migration and upgrade.
+
+## ObjectStorage Support via JuiceFS
+
+We can keep our store, index, and backup in the external S3 ObjectStorage. We use JuiceFS as the storage driver. Edit `config.txt` to define `BUCKET`, `ACCESS_KEY`, `SECRET_KEY` and `VOLUME_PREFIX`.
+
+Here is how to run it,
+
+```
+docker plugin install juicedata/juicefs:1.3.1
+docker compose -f compose.yaml -f juicefs.yaml up -d
+```
 
 ## Update to new version
 
