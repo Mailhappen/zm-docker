@@ -42,9 +42,9 @@ unset MAINTENANCE
 
 We often use this procedure to test migration and upgrade.
 
-## ObjectStorage Support via JuiceFS
+## ObjectStorage Support using JuiceFS
 
-We can keep our store, index, and backup in the external S3 ObjectStorage. We use JuiceFS as the storage driver. Edit `config.txt` to define `BUCKET`, `ACCESS_KEY`, `SECRET_KEY` and `VOLUME_PREFIX`.
+We can keep our store and backup in the external S3 ObjectStorage. We use JuiceFS storage driver. Edit `config.txt` to define `BUCKET`, `ACCESS_KEY`, `SECRET_KEY` and `VOLUME_PREFIX`.
 
 Here is how to run it,
 
